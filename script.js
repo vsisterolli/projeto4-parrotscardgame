@@ -1,4 +1,4 @@
-let lastFlipped = null, jogadas = 0, win = 0, numCards = 0, clockInterval;
+let lastFlipped = null, jogadas = 0, win = 0, numCards = 0, clockInterval, loading = false;
 const originalSet = document.querySelectorAll('.card');
 
 function updateClock() {
@@ -14,7 +14,7 @@ function finishGame() {
 
     clearInterval(clockInterval);
     const clock = document.querySelector('.clock');
-    alert(`Você ganhou em ${jogadas} jogadas e em ${clock.innerHTML} segundos!`)
+    alert(`Você ganhou em ${2*jogadas} jogadas e em ${clock.innerHTML} segundos!`)
 
     if(prompt("Deseja reiniciar?") === "sim") 
         startGame();
@@ -27,8 +27,8 @@ function selectCards() {
     while(numCards%2 | numCards <= 3 | numCards >= 15) 
         numCards = prompt("Selecione o número de cartas: (número par entre 4-14)");
 
-    let cards = originalSet;
-    cardsArr = Array.from(cards);
+    const cards = originalSet;
+    let cardsArr = Array.from(cards);
     cardsArr = cardsArr.slice(0, numCards);
     cardsArr = cardsArr.sort(shuffle);
 
@@ -61,11 +61,10 @@ function flipImage(card, xd) {
 
 }
 
-let kiki;
-
-
-
 function flip(element) {  
+
+    if(loading)
+        return;
 
     flipImage(element, 0);
 
@@ -80,11 +79,13 @@ function flip(element) {
 
         else {
             const holder = lastFlipped;
+            loading = true;
             setTimeout(function(){
                 flipImage(holder, 1);
                 flipImage(element, 1);
                 element.setAttribute('onclick', 'flip(this);');
                 holder.setAttribute('onclick', 'flip(this);');
+                loading = false;
             }, 1000);
         }
         

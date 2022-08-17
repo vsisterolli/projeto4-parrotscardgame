@@ -69,3 +69,12 @@ h1 {
     text-align: center;
     color: #75B79E;
 }
+
+.clock {
+    color: red;
+    font-size: 28px;
+    font-family: 'Roboto';
+    position: fixed;
+    left: 10%;
+    top: 15%;
+}

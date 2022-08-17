@@ -1,19 +1,33 @@
-//selectCards();
-let lastFlipped = null;
+let lastFlipped = null, jogadas = 0, win = 0, numCards = 0, clockInterval;
+const originalSet = document.querySelectorAll('.card');
+
+function updateClock() {
+    const clock = document.querySelector('.clock');
+    clock.innerHTML = (Date.now() - start)/1000;
+}
 
 function shuffle() {
     return Math.random() - 0.5;
 }
 
+function finishGame() {
+
+    clearInterval(clockInterval);
+    const clock = document.querySelector('.clock');
+    alert(`Você ganhou em ${jogadas} jogadas e em ${clock.innerHTML} segundos!`)
+
+    if(prompt("Deseja reiniciar?") === "sim") 
+        startGame();
+    
+}
+
 function selectCards() {
     
-    let numCards = 0;
 
     while(numCards%2 | numCards <= 3 | numCards >= 15) 
         numCards = prompt("Selecione o número de cartas: (número par entre 4-14)");
-    
 
-    let cards = document.querySelectorAll('.card');
+    let cards = originalSet;
     cardsArr = Array.from(cards);
     cardsArr = cardsArr.slice(0, numCards);
     cardsArr = cardsArr.sort(shuffle);
@@ -49,15 +63,17 @@ function delay(time) {
 }
   
 
-async function flip(element) {
+async function flip(element) {  
 
     flipImage(element, 0);
+    console.log(lastFlipped)
 
     if(lastFlipped !== null) {
         
         if(lastFlipped.innerHTML == element.innerHTML) {
             element.setAttribute('onclick', '');
             lastFlipped.setAttribute('onclick', '');
+            win++;
         }
 
         else {
@@ -68,6 +84,7 @@ async function flip(element) {
             lastFlipped.setAttribute('onclick', 'flip(this);');
         }
 
+        jogadas++;
         lastFlipped = null;
 
     }
@@ -79,5 +96,22 @@ async function flip(element) {
 
     }
 
+    if(2*win == numCards) {
+        await delay(200);
+        console.log("Hi");
+        finishGame();
+    }
 
 }
+
+function startGame() {
+    
+    lastFlipped = null, jogadas = 0, win = 0, numCards = 0, clockInterval;
+    selectCards();
+
+    start = Date.now();
+    clockInterval = setInterval(updateClock, 99);
+
+}
+
+startGame();

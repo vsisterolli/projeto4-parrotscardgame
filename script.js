@@ -45,7 +45,10 @@ function selectCards() {
 
 
 function flipImage(card, xd) {
+
+
     const imgs = card.querySelectorAll('img');
+
 
     if(!xd) {
         imgs[0].style.setProperty('transform', 'rotateY(0deg)')
@@ -58,18 +61,17 @@ function flipImage(card, xd) {
 
 }
 
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-}
-  
+let kiki;
 
-async function flip(element) {  
+
+
+function flip(element) {  
 
     flipImage(element, 0);
-    console.log(lastFlipped)
 
     if(lastFlipped !== null) {
         
+
         if(lastFlipped.innerHTML == element.innerHTML) {
             element.setAttribute('onclick', '');
             lastFlipped.setAttribute('onclick', '');
@@ -77,14 +79,17 @@ async function flip(element) {
         }
 
         else {
-            await delay(1000);
-            flipImage(element, 1);
-            flipImage(lastFlipped, 1);
-            element.setAttribute('onclick', 'flip(this);');
-            lastFlipped.setAttribute('onclick', 'flip(this);');
+            const holder = lastFlipped;
+            setTimeout(function(){
+                flipImage(holder, 1);
+                flipImage(element, 1);
+                element.setAttribute('onclick', 'flip(this);');
+                holder.setAttribute('onclick', 'flip(this);');
+            }, 1000);
         }
+        
 
-        jogadas++;
+        jogadas++;  
         lastFlipped = null;
 
     }
@@ -96,11 +101,9 @@ async function flip(element) {
 
     }
 
-    if(2*win == numCards) {
-        await delay(200);
-        console.log("Hi");
-        finishGame();
-    }
+    if(2*win == numCards) 
+        setTimeout(finishGame, 200);
+    
 
 }
 
